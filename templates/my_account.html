@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>TAU Fashion Store</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='store.css') }}">
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-content">
+                <img src="{{ url_for('static', filename='Blue Modern Fashion Shop Logo (1).png') }}" alt="Fashion Store Logo" class="logo">
+                <h1>TAU Fashion Store</h1>
+                <p class="greeting">Hey {{session.user.username}}!</p>
+            </div>
+        </header>
+
+        <nav class="navigation">
+            <a href="/store" class="btn">Store</a>
+            {% if session.user.is_admin %}
+                <a href="/stock_management" class="btn admin-btn">Stock Management</a>
+            {% endif %}
+            <a class="btn_pressed">My Account</a>
+            <a href="/logout" class="btn">Logout</a>
+        </nav>
+
+
+        <!-- User Details Section -->
+        <div class="container">
+            <h1>Welcome to your page, {{session.user.username}}!</h1>
+            <table>
+                <tr>
+                    <td colspan="2">These are your details</td>
+                </tr>
+                <tr>
+                    <td>Username:</td>
+                    <td>{{session.user.username}}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{session.user.email}}</td>
+                </tr>
+                <tr>
+                    <td>Type of Profile:</td>
+                    <td>
+                        {% if session.user.is_admin %}
+                            Web Administrator
+                        {% else %}
+                            Regular Profile
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Purchase History Section -->
+        <div class="container">
+            <h2>Your Purchase History</h2>
+            <table>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Datetime of Purchase</th>
+                    <th>Total Cost</th>
+                </tr>
+                {% for tr in transactions %}
+                    <tr>
+                        <td>{{ tr.order_id }}</td>
+                        <td>{{ tr.order_datetime }}</td>
+                        <td>{{ tr.total_cost }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </body>
+</html>

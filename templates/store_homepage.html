@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>TAU Fashion Store</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='store.css') }}">
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-content">
+                <img src="{{url_for('static', filename= 'Blue Modern Fashion Shop Logo - שקוף.png') }}" alt="Fashion Store Logo" class="logo">
+                <h1>TAU Fashion Store</h1>
+                <p class="greeting">Hey {{session.user.username}}!</p>
+            </div>
+        </header>
+
+        <nav class="navigation">
+            <a class="btn_pressed">Store</a>
+            {% if session.user.is_admin %}
+                <a href="/stock_management" class="btn admin-btn">Stock Management</a>
+            {% endif %}
+            <a href="/my_account" class="btn">My Account</a>
+            <a href="/logout" class="btn">Logout</a>
+        </nav>
+
+        {% if message_success %}
+            <p class="success_message">{{message_success}}</p>
+        {% endif %}
+        {% if message_error %}
+            <p class="error_message">{{message_error}}</p>
+        {% endif %}
+
+        <br/><br/>
+        <main class="product-list">
+            <form action="/store" method="post">
+                <table class="product-table">
+                    {% for j in range(num_rows) %}
+                        <tr>
+                            {% for i in range(3*j, 3*j+3) %}
+                                {% if i < num_products %}
+                                    {{products[i].amount_in_stock}}
+                                    <td class="product-card">
+                                        <div>
+                                            <img src="{{products[i].image_url}}" alt="{{products[i].product_name}}" class="product-image">
+                                            <h4>{{products[i].product_name}}</h4>
+                                            <p>Amount In-Stock: {{products[i].amount}}</p>
+                                            <p>{{products[i].cost}}₪</p>
+                                            <label for="{{products[i].catalog_number}}">Order Quantity:</label>
+                                            <input id="{{products[i].catalog_number}}" type="number" min="0" max="{{products[i].amount}}" value="0"
+                                                   name="order_{{products[i].id}}" class="quantity-input">
+                                        </div>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+
+                    <tr>
+                        <td colspan="3">
+                            <button type="submit">Purchase & Checkout</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </main>
+    </body>
+</html>
